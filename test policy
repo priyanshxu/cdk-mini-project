@@ -1,0 +1,63 @@
+--
+-- Grant access to the sample database to our test roles:
+--
+use database ALTR_GETTING_STARTED_DB;
+use role accountadmin;
+
+grant select on table SAMPLE_CUSTOMER to role SECURITYADMIN;
+grant usage on database ALTR_GETTING_STARTED_DB to role SECURITYADMIN;
+grant usage on schema PUBLIC to role SECURITYADMIN;
+grant usage on warehouse COMPUTE_WH to role SECURITYADMIN;
+
+grant select on table SAMPLE_CUSTOMER to role SYSADMIN;
+grant usage on database ALTR_GETTING_STARTED_DB to role SYSADMIN;
+grant usage on schema PUBLIC to role SYSADMIN;
+grant usage on warehouse COMPUTE_WH to role SYSADMIN;
+
+grant select on table SAMPLE_CUSTOMER to role PUBLIC;
+grant usage on database ALTR_GETTING_STARTED_DB to role PUBLIC;
+grant usage on schema PUBLIC to role PUBLIC;
+grant usage on warehouse COMPUTE_WH to role PUBLIC;
+
+-- warehouse
+use COMPUTE_WH;
+
+-- *** END OF GRANT ACCESS section ***
+
+
+--
+-- ALTR Policy Tests:
+--
+
+-- SECURITYADMIN gets to see emails with no masking at all:
+use role SECURITYADMIN;
+select * from SAMPLE_CUSTOMER;
+
+-- SYSADMIN and ACCOUNT admin domain portion of emails only, email name portion is masked 
+use role SYSADMIN;
+select from SAMPLE_CUSTOMER;
+
+use role ACCOUNTADMIN;
+select from SAMPLE_CUSTOMER;
+
+-- PUBLIC sees emails fully masked
+use role PUBLIC;
+select * from SAMPLE_CUSTOMER;
+
+-- Now go into the ALTR portal and make the following changes 
+-- 1. remove the PUBLIC role from the fully masked lock,
+-- 2. add the PUBLIC role to the partially masked lock.
+
+-- Run query as PUBLIC role again and observe that moving the role into the 
+-- partially masked lock instantly updates access for that role
+
+use role PUBLIC;
+select * from SAMPLE_CUSTOMER;
+
+-- See what happens when a role is not associated with any policy.  Do this by going
+-- into the ALTR portal and unselecting the PUBLIC role from the partially masked lock.  
+-- Make sure that the PUBLIC role is not a part of any other lock.
+-- 
+
+use role PUBLIC;
+select * from SAMPLE_CUSTOMER;
