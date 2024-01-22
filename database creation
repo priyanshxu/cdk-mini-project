@@ -1,0 +1,19 @@
+-- Use ACCOUNTADMIN role
+USE ROLE ACCOUNTADMIN;
+
+-- Create Sample Database
+CREATE DATABASE ALTR_GETTING_STARTED_DB;
+
+-- Set DB Context
+USE DATABASE  ALTR_GETTING_STARTED_DB;
+
+-- Populate Sample database from Snowflakes shared sample database. 
+-- Usually named: SNOWFLAKE_SAMPLE_DATA
+CREATE TABLE SAMPLE_CUSTOMER AS 
+    SELECT 
+        C_FIRST_NAME,
+        C_LAST_NAME,
+        C_EMAIL_ADDRESS,
+        C_BIRTH_COUNTRY
+    FROM SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.CUSTOMER
+    LIMIT 10000;
